@@ -1,0 +1,18 @@
+Lớp:lớp trừu tượng:định nghĩa phương thức mà không cần khai báo biến 
+nạp chồng phương thức: dùng kiểu dữ liệu, số lượng biến để phân biệt
+từ khóa this
+thừa kế:super
+ghi đè phương thức:một class con kế thừa phương thức của class cha dùng super() hoặc thêm biến vào phương thức được lấy trong class con
+file
+1. FileOutputStream
+Chức năng: FileOutputStream chủ yếu được sử dụng để ghi dữ liệu tuần tự vào một tệp tin.
+Chế độ hoạt động: Chỉ hỗ trợ ghi dữ liệu (có thể tạo hoặc ghi thêm vào tệp tin đã tồn tại).
+Ghi tuần tự: Dữ liệu được ghi tuần tự từ đầu đến cuối của tệp tin. Không hỗ trợ đọc hay ghi ngẫu nhiên.
+Phương thức chính: write(int b), write(byte[] b), write(byte[] b, int off, int len), close().
+Sử dụng: Thích hợp cho các trường hợp cần ghi dữ liệu liên tục như lưu log, lưu kết quả xử lý.
+2. RandomAccessFile
+Chức năng: RandomAccessFile hỗ trợ cả đọc và ghi dữ liệu vào tệp tin, cho phép truy cập ngẫu nhiên tới bất kỳ vị trí nào trong tệp.
+Chế độ hoạt động: Có thể mở tệp ở chế độ chỉ đọc ("r") hoặc chế độ đọc/ghi ("rw").
+Truy cập ngẫu nhiên: Có thể đọc và ghi dữ liệu tại bất kỳ vị trí nào trong tệp tin bằng cách di chuyển con trỏ tệp (file pointer).
+Phương thức chính: read(), write(int b), seek(long pos), read(byte[] b), write(byte[] b), close().
+Sử dụng: Thích hợp cho các trường hợp cần đọc hoặc ghi dữ liệu tại các vị trí cụ thể, chẳng hạn như cơ sở dữ liệu tệp, chỉnh sửa tệp nhị phân, hoặc khi làm việc với các tệp có cấu trúc phức tạp.

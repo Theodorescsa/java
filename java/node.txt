@@ -1,0 +1,22 @@
+Các thành phần static
+biến static
+phương thức static
+khối static
+một phương thức static chỉ có thể gọi các pt static khác, nó không thể gọi các phương thưc skhoong là static
+một phương thức static có thể được gọi trưc tiếp từ class mà ko cần tạo ra đối tượng từ lớp đó
+một phương thức static chỉ có thể truy xuất các biến static nó không thể truy xuất các biến đối tượng
+khối static được thực hiện trước
+khối static dùng để khởi tạo các biến static và khối static luôn được xử lí trước
+
+
+-trong lập trình java có những lúc ta cần định nghãi lớp cha và khai báo cấu trúc một cách tổng quát ma không cần cài 
+đặt cụ thể cho từng pt các lớp cha sẽ định nghãi dạng tổng quát hóa đc dùng chung cho các lớp con của nó các cài đặt cụ
+thể sẽ được cài đặt ở lớp con
+-một lớp trừu tượng không có các đối tượng cụ thể
+-mỗi khi chúng ta khai báo các class nghĩa là chúng ta tạo ra các kiểu dữ liệu mới
+
+là cơ chế qua đps mpptj lời gọi qua pt dc ghi đè sẽ đc phân giải tại thời điểm dừng ctrinh chứ k phải tạo thời điểm biên dịch, 
+cwo chế này là quan trọng bởi vì đây là cách java cài đặt đa hình thời gian chạy. Một biến tham chiếu của lopwd cha cps thể tham chiếu tới đối tg của lớp con 
+java để phân tích các 
+BTVN
+tra cứu các phương thức InputStream, OutputStream

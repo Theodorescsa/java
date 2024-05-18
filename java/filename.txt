@@ -1,0 +1,30 @@
+Truy cập tệp ngẫu nhiên RandomAcessFile
+ta có thể dọc file từ vị trí bất kỳ
+RandomAcessFile(String name, String mode)throws IOException
+mode = "r":read
+mode = ""rw:write
+RandomAcessFile(File name, String mode)
+long getFilePointer():trả về vị trí của con trỏ tệp
+long length():độ dài(số byte trong tệp)
+void seek(long offset) dịch chuyển con trỏ tệp
+void close()
+sử dụng các luông fkis tự để đọc ghi một tệp tin văn bản 
+
+
+Lập trình đa tuyến đoạn cho phép một ctrinh thcuwj hiện nhiều tac vụ đồng thời đa tuyến đoạn rất ích lợi trong lm việc thực tế vì nó cho phép xử lý đồng thời, lập trình da tuyến đoạn
+đòi hỏi ta có cách nhìn khác về phần mềm
+các tuyến đoạn có thể truy xuất đến các biến dùng chung để cùng nhau hợp tác các tác vụ
+VD A:Bank Account
+balance:số dư tk
+setBalance:xác lập số dư
+getBalance():trả về số dư của tk
+
+nhược điểm của xử lý đa tuyến đoạn là các đoạn có thể truy xuất tới cùng 1 biến chung có thể gây ra sự không nhất quán hay mâu thuẫn về dữ liệu
+một tuyến đoạn có thể ở tròn 4 tuyến đonạ sau
+new: là khí tuyến đoạn mới đc tạo ra nhưng chưa được khởi động
+runnerble:là khi pthuc start() được gọi  nó sẽ gọi phương thức run và khi đó tuyến đoạn giành dudocj quyền xuwewr lí từ hệ ddieuuef hành
+blocked:một tuyến đoạn rơi vào trạng thái block khi 1 trong các sự kiện sau xảy ra
+sleep()
+wait()
+dead: 1 tuyến đoạn rơi vào trangjt hái dead khi pthuc run hoàn thành
+Cách lập trình đa tuyến trong java
