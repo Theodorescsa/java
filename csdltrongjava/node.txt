@@ -1,0 +1,11 @@
+Java cung cấp một giao diện lập trình ứng dụng mức SQL 
+I) API Kết nối cơ sở dữ liệu (JDBC)
+Java Database Connectivity
+đây là giao diện lập trình ứng dụng mysql
+-Thiết lập kết nối tới csdl
+-Khởi tạo các truy vấn(select, in sert, update, delete)
+-Chuẩn hóa cấu trúc truy vấn
+-Jdbc thực hiện các mục tiêu của n..., mỗi một giao diện được thực hiện bởi từng nhà sản xuất hệ cơ sở dữ liệu,
+tập hợp các lớp thực thi các jdbc cho một động cơ csdl gọi là trình điều khiển jdbc do đó khi xậy dựng một cơ sở dữ liệu 
+ta không cần phải xem xét đến tất cả các lớp cơ sở jdbc sẽ che dấu các chi tiết của từng csdl 
+do đó ta chỉ cần quan tâm đến ứng dụng mà ta đang xây dựng

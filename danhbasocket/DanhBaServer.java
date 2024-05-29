@@ -1,50 +1,46 @@
 import java.util.*;
 import java.io.*;
 import java.net.*;
+
 class LienHe {
     String hoten, tenthuonggoi, diachi, email;
     public List<String> arraySodienthoai;
-    
-    LienHe(String hoten,String tenthuonggoi, String diachi,String email,List<String> arraySodienthoai) {
+
+    LienHe(String hoten, String tenthuonggoi, String diachi, String email, List<String> arraySodienthoai) {
         this.hoten = hoten;
         this.tenthuonggoi = tenthuonggoi;
         this.diachi = diachi;
         this.email = email;
-
         this.arraySodienthoai = new ArrayList<>(arraySodienthoai);
     }
+
     public void printLienhe() {
         System.out.println("LienHe{" +
-        "hoTen='" + hoten + '\'' +
-        ", tenThuongGoi='" + tenthuonggoi + '\'' +
-        ", diaChi='" + diachi + '\'' +
-        ", email='" + email + '\'' +
-        ", soDienThoai=" + arraySodienthoai +
-        '}');
-    } 
+                "hoTen='" + hoten + '\'' +
+                ", tenThuongGoi='" + tenthuonggoi + '\'' +
+                ", diaChi='" + diachi + '\'' +
+                ", email='" + email + '\'' +
+                ", soDienThoai=" + arraySodienthoai +
+                '}');
+    }
 }
-public class DanhBa {
+
+public class DanhBaServer {
     List<LienHe> danhBa;
     public final static int DEFAULT_PORT = 2007;
 
-    DanhBa() {
+    DanhBaServer() {
         this.danhBa = new ArrayList<>();
     }
+
     public void addLienhe(LienHe lienHe) {
         danhBa.add(lienHe);
     }
+
     public void printAllLienHe() {
         System.out.println("Tat ca lien he:");
         for (LienHe lienHe : this.danhBa) {
-            System.out.println(
-                "LienHe{" +
-        "hoTen='" + lienHe.hoten + '\'' +
-        ", tenThuongGoi='" + lienHe.tenthuonggoi + '\'' +
-        ", diaChi='" + lienHe.diachi + '\'' +
-        ", email='" + lienHe.email + '\'' +
-        ", soDienThoai=" + lienHe.arraySodienthoai +
-        '}'
-            );
+            lienHe.printLienhe();
         }
     }
     public void filterLienHe(String num) {
@@ -130,54 +126,43 @@ public class DanhBa {
         scanner.close();
     }
     public void addLienHeBySocket() {
-        int port = DEFAULT_PORT;
-        
-        try (ServerSocket ss = new ServerSocket(port)) {
-            System.out.println("Server is listening on port " + port);
-    
+        try (ServerSocket serverSocket = new ServerSocket(DEFAULT_PORT)) {
+            System.out.println("Server is listening on port " + DEFAULT_PORT);
+
             while (true) {
-                try (Socket s = ss.accept();
-                     PrintWriter pw = new PrintWriter(new OutputStreamWriter(s.getOutputStream()), true);
-                     BufferedReader br = new BufferedReader(new InputStreamReader(s.getInputStream()))) {
-    
-                    System.out.println("Client connected");
-                    List<String> listInfo = new ArrayList<>();
-                    List<String> sodienthoaimoi = new ArrayList<>();
-                    int i = 0;
-    
-                    while (true) {
-                        String line = br.readLine();
-                        if (line == null || line.equalsIgnoreCase("exit")) {
-                            break;
-                        }
-                        if (i == 4) {
-                            sodienthoaimoi.addAll(Arrays.asList(line.split(",")));
-                            LienHe newLienHe = new LienHe(listInfo.get(0), listInfo.get(1), listInfo.get(2), listInfo.get(3), sodienthoaimoi);
-                            danhBa.add(newLienHe);
-                            pw.println("Da them lien he thanh cong");
-                            break;
-                        } else {
-                            listInfo.add(line);
-                            pw.println("Received: " + line);
-                            i++;
-                        }
-                    }
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+                Socket socket = serverSocket.accept();
+                try (BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+                PrintWriter out = new PrintWriter(socket.getOutputStream(), true)) {
+   
+               List<String> info = new ArrayList<>();
+               for (int i = 0; i < 5; i++) {
+                   String input = in.readLine();
+                   if (input.equalsIgnoreCase("exit")) {
+                       break;
+                   }
+                   info.add(input);
+                   out.println(info.get(i));
+               }
+   
+               if (info.size() == 5) {
+                   List<String> phoneNumbers = Arrays.asList(info.get(4).split(","));
+                   LienHe lienHe = new LienHe(info.get(0), info.get(1), info.get(2), info.get(3), phoneNumbers);
+                   addLienhe(lienHe);
+               }
+   
+               printAllLienHe();
+           } catch (IOException e) {
+               e.printStackTrace();
+           }
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
-    
+
     
     public static void main(String[] args) {
-        DanhBa danhbacuatoi = new DanhBa();
-
-        danhbacuatoi.addLienHeBySocket();
-        danhbacuatoi.printAllLienHe();
-
+        DanhBaServer danhBaServer = new DanhBaServer();
+        danhBaServer.addLienHeBySocket();
     }
-}    
-
+}

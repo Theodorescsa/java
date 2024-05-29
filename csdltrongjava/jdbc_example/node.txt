@@ -1,0 +1,5 @@
+Viết một đoạn mã java kết nối với một cơ sở dữ liệu quản lý khóa học (CourseDB) tên bảng Student {studentid=int,}
+viết ctrinh java kết nối csdl CourseDB
+sử dụng java liệt kê tất cả các bản ghi
+thay lastname = "Phạm"
+cho studentid = 10

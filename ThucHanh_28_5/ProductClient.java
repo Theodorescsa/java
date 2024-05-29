@@ -1,20 +1,21 @@
+package ThucHanh_28_5;
 import java.net.*;
 import java.io.*;
 
-public class DanhBaClient {
+public class ProductClient {
     public static void main(String[] args) {
         String serverAddress = "localhost";
         int serverPort = 2007;
-        String[] listInfo = {"ho ten moi", "ten thuong goi", "dia chi", "email", "so dien thoai"};
+        String[] listInfo = {"ma san pham", "ten san pham", "dia chi", "mo ta", "chi tiet san pham"};
+        String[] typeInfo = {"ten bien the","gia"}
         int i = 0;
-
         try {
             Socket socket = new Socket(serverAddress, serverPort);
             PrintWriter out = new PrintWriter(new OutputStreamWriter(socket.getOutputStream()), true);
             BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             BufferedReader userInput = new BufferedReader(new InputStreamReader(System.in));
 
-            System.out.println("Connected to the server. Moi ban nhap muc muon chon cua danh ba (type 'exit' to quit):");
+            System.out.println("Connected to the server. Moi ban nhap muc muon chon (type 'exit' to quit):\n1/Them san pham\n2/Them bien the cua san pham");
 
             while (i < listInfo.length) {
                 System.out.println("Moi ban nhap " + listInfo[i] + ":");
