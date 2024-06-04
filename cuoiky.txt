@@ -1,0 +1,13 @@
+Student(StudentId,admission year,getStudentId(),setStudentId(),List<Course>)
+Các lớp con là Student, faculty thừa kế các thuộc tính từ lớp cơ bản Person
+Phải có các cấu tử, các cấu tử sẽ được sử dụng để khởi tạo các đối tượng
+Áp dụng ứng dụng thừa kế dự án có thể tính thừa kế bằng cách tạo ra một lớp cơ sở 
+Các lớp con sẽ thừa kế các thuộc tính từ lớp cơ sở trong khi bổ sung thêm các thuộc tính và các phương thức cụ thể
+các thuộc tính của person đưa vào từ khóa protected
+các thuộc tính id của các lớp nên đưa vào private
+phải có các phương thức get và set để truy xuất dữ liệu
+--Kiểm tra tính đa hình
+dự án có thể đưa vào tính đa hình bằng cách định nghĩa có pt asbtract cho các hành động như hiển thị thông tin
+các lớp con student, faculty 
+-- Khai thác các cấu trúc dữ liệu và collection trong java
+Các sinh viên sẽ tận dụng các cấu trúc Arraylist

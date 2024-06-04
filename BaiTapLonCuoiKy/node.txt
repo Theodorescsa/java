@@ -1,0 +1,6 @@
+Chuyển từ đối tượng sang chuooit bit và chuẩn từ chuổi bit sang đối tượng
+Sử dụng Lớp thực thi giao tiếp Serializable trong java.io, java.util
+VD
+public class Person implements {
+    
+} 
