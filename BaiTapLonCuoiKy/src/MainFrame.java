@@ -103,7 +103,7 @@ public class MainFrame extends JFrame {
         displayAllButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                new DisplayAllFrame(students, faculties, courses);
+                new DisplayAllFrame(students, faculties, courses, enrollment);
             }
         });
 
@@ -121,5 +121,6 @@ public class MainFrame extends JFrame {
     public static void main(String[] args) {
         MainFrame newFrame = new MainFrame();
         newFrame.connectToDatabase();
+
     }
 }

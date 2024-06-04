@@ -7,7 +7,7 @@ public class DisplayAllFrame extends JFrame {
     private ArrayList<Faculty> faculties;
     private ArrayList<Course> courses;
 
-    public DisplayAllFrame(ArrayList<Student> students, ArrayList<Faculty> faculties, ArrayList<Course> courses) {
+    public DisplayAllFrame(ArrayList<Student> students, ArrayList<Faculty> faculties, ArrayList<Course> courses, Enrollment enrollment) {
         this.students = students;
         this.faculties = faculties;
         this.courses = courses;
@@ -34,15 +34,27 @@ public class DisplayAllFrame extends JFrame {
         }
 
         sb.append("\nCourses:\n");
-        for (Course course : courses) {
-            sb.append("Name: ").append(course.getCourseName()).append(", Code: ").append(course.getCourseCode()).append(", Capacity: ").append(course.getCapacity()).append("\n");
-            sb.append("Faculty: ").append(course.getFaculty().getName()).append(", Department: ").append(course.getFaculty().getDepartment()).append("\n");
+        for (int i = 0; i< courses.size();i++) {
+            sb.append("Name: ").append(courses.get(i).getCourseName())
+              .append(", Code: ").append(courses.get(i).getCourseCode())
+              .append(", Capacity: ").append(courses.get(i).getCapacity())
+              .append("\n");
+            sb.append("Faculty: ").append(courses.get(i).getFaculty().getName())
+              .append(", Department: ").append(courses.get(i).getFaculty().getDepartment())
+              .append("\n");
             sb.append("Enrolled Students:\n");
-            for (Student student : course.getEnrolledStudents()) {
-                sb.append("- ").append(student.getName()).append("\n");
+        
+            for (Student student : courses.get(i).getEnrolledStudents()) {
+                enrollment.getStudentsPoints(courses.get(i), student);
+                System.out.println("Hoc sinh nay là:" + student);
+                
+                Float point = enrollment.getStudentsPoints(courses.get(i), student).get(student);
+                sb.append("- ").append(student.getName())
+                  .append(", Point: ").append(point)
+                  .append("\n");
             }
         }
-
+        
         textArea.setText(sb.toString());
 
         add(scrollPane, BorderLayout.CENTER);

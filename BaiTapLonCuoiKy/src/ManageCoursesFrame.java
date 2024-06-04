@@ -27,6 +27,9 @@ public class ManageCoursesFrame extends JFrame {
         JComboBox<String> studentComboBox = new JComboBox<>();
         JLabel courseLabel = new JLabel("Course:");
         JComboBox<String> courseComboBox = new JComboBox<>();
+        JLabel pointLabel = new JLabel("Point:");
+        JTextField pointField = new JTextField();
+
 
         for (Student student : students) {
             studentComboBox.addItem(student.getName());
@@ -40,14 +43,19 @@ public class ManageCoursesFrame extends JFrame {
         enrollPanel.add(studentComboBox);
         enrollPanel.add(courseLabel);
         enrollPanel.add(courseComboBox);
+        enrollPanel.add(pointLabel);
+        enrollPanel.add(pointField);
 
         JButton enrollButton = new JButton("Enroll");
 
         enrollButton.addActionListener(new ActionListener() {
+            
             @Override
             public void actionPerformed(ActionEvent e) {
                 String studentName = (String) studentComboBox.getSelectedItem();
                 String courseName = (String) courseComboBox.getSelectedItem();
+                String getPoint = pointField.getText();
+                float getFloatPoint = Float.parseFloat(getPoint);
                 Student student = null;
                 Course course = null;
 
@@ -65,9 +73,9 @@ public class ManageCoursesFrame extends JFrame {
                     }
                 }
 
-                if (student != null && course != null) {
+                if (student != null && course != null && getPoint != null) {
                     if (course.getEnrolledStudents().size() < course.getCapacity()) {
-                        enrollment.enroll(student, course);
+                        enrollment.enroll(student, course, getFloatPoint);
                         JOptionPane.showMessageDialog(null, "Student enrolled successfully!");
                     } else {
                         JOptionPane.showMessageDialog(null, "Course is full!");

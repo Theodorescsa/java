@@ -9,7 +9,6 @@ public class Student extends Person {
     public String getMajor() {
         return major;
     }
-
     @Override
     public void displayInfo() {
         System.out.println("Name: " + getName());
