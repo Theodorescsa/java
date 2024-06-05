@@ -33,11 +33,11 @@ public class ManageCoursesFrame extends JFrame {
 
 
         for (Student student : students) {
-            studentComboBox.addItem(student.getName());
+            studentComboBox.addItem(student.getId());
         }
 
         for (Course course : courses) {
-            courseComboBox.addItem(course.getCourseName());
+            courseComboBox.addItem(course.getCourseCode());
         }
 
         enrollPanel.add(studentLabel);
@@ -53,8 +53,8 @@ public class ManageCoursesFrame extends JFrame {
             
             @Override
             public void actionPerformed(ActionEvent e) {
-                String studentName = (String) studentComboBox.getSelectedItem();
-                String courseName = (String) courseComboBox.getSelectedItem();
+                String studentId = (String) studentComboBox.getSelectedItem();
+                String courseCode = (String) courseComboBox.getSelectedItem();
                 String getPoint = pointField.getText();
                 float getFloatPoint = Float.parseFloat(getPoint);
                 Student student = null;
@@ -64,14 +64,14 @@ public class ManageCoursesFrame extends JFrame {
                 Connection connection = null;
                 Statement statement = null;
                 for (Student s : students) {
-                    if (s.getName().equals(studentName)) {
+                    if (s.getId().equals(studentId)) {
                         student = s;
                         break;
                     }
                 }
 
                 for (Course c : courses) {
-                    if (c.getCourseName().equals(courseName)) {
+                    if (c.getCourseCode().equals(courseCode)) {
                         course = c;
                         break;
                     }

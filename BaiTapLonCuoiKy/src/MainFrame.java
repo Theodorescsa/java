@@ -38,8 +38,8 @@ public class MainFrame extends JFrame {
                 + ")";
             statement.executeUpdate(createStudentTableQuery);
             System.out.println("Đã tạo thành công bảng student");
-            String createIndexQueryforStudentTable = "create index studentid_index ON student(studentid)";
-            statement.executeUpdate(createIndexQueryforStudentTable);
+            // String createIndexQueryforStudentTable = "create index studentid_index ON student(studentid)";
+            // statement.executeUpdate(createIndexQueryforStudentTable);
             String createFacultyTableQuery = "create table if not exists cosodaotao.faculty "
                 + "("
                 + "id int auto_increment primary key,"
@@ -50,22 +50,22 @@ public class MainFrame extends JFrame {
                 + ")";
             statement.executeUpdate(createFacultyTableQuery);
             System.out.println("Đã tạo thành công bảng faculty");
-            String createIndexQueryforFacultyTable = "create index facultyid_index ON faculty (facultyid)";
-            statement.executeUpdate(createIndexQueryforFacultyTable);
-            String createIndexQueryforFacultyTable2 = "create index name_index ON faculty (name)";
-            statement.executeUpdate(createIndexQueryforFacultyTable2);
+            // String createIndexQueryforFacultyTable = "create index facultyid_index ON faculty (facultyid)";
+            // statement.executeUpdate(createIndexQueryforFacultyTable);
+            // String createIndexQueryforFacultyTable2 = "create index _index ON faculty (name)";
+            // statement.executeUpdate(createIndexQueryforFacultyTable2);
             String createCourseTableQuery = "create table if not exists cosodaotao.course "
                 + "("
                 + "id int auto_increment primary key,"
                 + "coursename varchar(50),"
                 + "coursecode varchar(20),"
-                + "facultyname varchar(50),"
-                + "foreign key (facultyname) references faculty(name)"
+                + "facultyid varchar(20),"
+                + "foreign key (facultyid) references faculty(facultyid)"
                 + "on delete cascade"
                 + ")";
             statement.executeUpdate(createCourseTableQuery);
-            String createIndexQueryforCourseTable = "create index coursecode_index ON course (coursecode)";
-            statement.executeUpdate(createIndexQueryforCourseTable);
+            // String createIndexQueryforCourseTable = "create index coursecode_index ON course (coursecode)";
+            // statement.executeUpdate(createIndexQueryforCourseTable);
             System.out.println("Đã tạo thành công bảng course");
             String createPointTableQuery = "create table if not exists cosodaotao.point "
             + "("

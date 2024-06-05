@@ -25,8 +25,8 @@ public class Main {
                 + "gender varchar(20)"
                 + ")";
             statement.executeUpdate(createPersonTableQuery);
-            String createIndexQueryforPersonTable = "create index personid_index ON person (personid)";
-            statement.executeUpdate(createIndexQueryforPersonTable);
+            // String createIndexQueryforPersonTable = "create index personid_index ON person (personid)";
+            // statement.executeUpdate(createIndexQueryforPersonTable);
             String createStudentTableQuery = "create table if not exists cosodaotao.student "
                 + "("
                 + "id int auto_increment primary key,"
@@ -40,8 +40,8 @@ public class Main {
                 + ")";
             statement.executeUpdate(createStudentTableQuery);
             System.out.println("Đã tạo thành công bảng student");
-            String createIndexQueryforStudentTable = "create index studentid_index ON student(studentid)";
-            statement.executeUpdate(createIndexQueryforStudentTable);
+            // String createIndexQueryforStudentTable = "create index studentid_index ON student(studentid)";
+            // statement.executeUpdate(createIndexQueryforStudentTable);
             String createFacultyTableQuery = "create table if not exists cosodaotao.faculty "
                 + "("
                 + "id int auto_increment primary key,"
@@ -55,8 +55,8 @@ public class Main {
                 + ")";
             statement.executeUpdate(createFacultyTableQuery);
             System.out.println("Đã tạo thành công bảng faculty");
-            String createIndexQueryforFacultyTable = "create index facultyid_index ON faculty (facultyid)";
-            statement.executeUpdate(createIndexQueryforFacultyTable);
+            // String createIndexQueryforFacultyTable = "create index facultyid_index ON faculty (facultyid)";
+            // statement.executeUpdate(createIndexQueryforFacultyTable);
             String createCourseTableQuery = "create table if not exists cosodaotao.course "
                 + "("
                 + "id int auto_increment primary key,"
@@ -88,7 +88,7 @@ public class Main {
 
     public static void main(String[] args) {
         Main main = new Main();
-        main.connectToDatabase();
+        // main.connectToDatabase();
         Faculty faculty1 = new Faculty("Tran Dang Hoan", "F12345",true, "Master Java");
         Faculty faculty2 = new Faculty("Dr. Green", "F67890",true, "Mathematics");
 
@@ -105,9 +105,9 @@ public class Main {
         enrollment.enroll(student2, course2,8);
         enrollment.enroll(student1, course2,9); 
         enrollment.enroll(student2, course3,10);
-        // student1.displayInfo();
-        // faculty1.displayInfo();
-        // course1.displayCourseInfo();
+        student1.displayInfo();
+        faculty1.displayInfo();
+        course1.displayCourseInfo();
         System.out.println("Ten khoa hoc|GiangVien|Ten Sinh Vien|Diem");
         System.out.println(enrollment.infoHashmap);
     }

@@ -29,7 +29,7 @@ public class AddCourseFrame extends JFrame {
         JComboBox<String> facultyComboBox = new JComboBox<>();
 
         for (Faculty faculty : faculties) {
-            facultyComboBox.addItem(faculty.getName());
+            facultyComboBox.addItem(faculty.getId());
         }
 
         inputPanel.add(courseNameLabel);
@@ -49,14 +49,14 @@ public class AddCourseFrame extends JFrame {
                 String courseName = courseNameField.getText();
                 String courseCode = courseCodeField.getText();
                 int capacity = Integer.parseInt(capacityField.getText());
-                String facultyName = (String) facultyComboBox.getSelectedItem();
+                String facultyId = (String) facultyComboBox.getSelectedItem();
                 Faculty faculty = null;
                 String user = "root"; 
                 String password = "dinhthai2004"; 
                 Connection connection = null;
                 Statement statement = null;
                 for (Faculty f : faculties) {
-                    if (f.getName().equals(facultyName)) {
+                    if (f.getId().equals(facultyId)) {
                         faculty = f;
                         break;
                     }
@@ -75,11 +75,11 @@ public class AddCourseFrame extends JFrame {
                             preparedStatement.setString(1, courseCode);
                             ResultSet resultSet = preparedStatement.executeQuery();
                             // if (resultSet.next()) {
-                                String insertToCourseTableQuery = "insert into course (coursename, coursecode, facultyname) values (?, ?, ?)";
+                                String insertToCourseTableQuery = "insert into course (coursename, coursecode, facultyid) values (?, ?, ?)";
                                 preparedStatement = connection.prepareStatement(insertToCourseTableQuery);
                                 preparedStatement.setString(1, courseName);
                                 preparedStatement.setString(2, courseCode);
-                                preparedStatement.setString(3, faculty.getName());
+                                preparedStatement.setString(3, faculty.getId());
                                 preparedStatement.executeUpdate();
                                 System.out.println("Them course vao co so du lieu thanh cong");
                             // }
