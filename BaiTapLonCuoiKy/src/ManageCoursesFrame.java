@@ -3,13 +3,14 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
-
+import java.sql.*;
 public class ManageCoursesFrame extends JFrame {
     private ArrayList<Course> courses;
     private ArrayList<Faculty> faculties;
     private ArrayList<Student> students;
     private Enrollment enrollment;
-
+    final static String jdbcURL = "jdbc:mysql://localhost:3306/CoSoDaoTao";
+    final static String jdbcDriver = "com.mysql.cj.jdbc.Driver";
     public ManageCoursesFrame(ArrayList<Course> courses, ArrayList<Faculty> faculties, ArrayList<Student> students, Enrollment enrollment) {
         this.courses = courses;
         this.faculties = faculties;
@@ -58,7 +59,10 @@ public class ManageCoursesFrame extends JFrame {
                 float getFloatPoint = Float.parseFloat(getPoint);
                 Student student = null;
                 Course course = null;
-
+                String user = "root"; 
+                String password = "dinhthai2004"; 
+                Connection connection = null;
+                Statement statement = null;
                 for (Student s : students) {
                     if (s.getName().equals(studentName)) {
                         student = s;

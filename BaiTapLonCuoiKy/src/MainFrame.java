@@ -12,24 +12,93 @@ public class MainFrame extends JFrame {
     private ArrayList<Faculty> faculties;
     private ArrayList<Course> courses;
     final static String jdbcURL = "jdbc:mysql://localhost:3306/CoSoDaoTao";
-    final static String jdbcDriver = "com.mysql.cj.jdbc.Driver";
+    final static String jdbcDriver = "com.mysql.cj.jdbc.Driver"; 
 
     public void connectToDatabase() {
-        String user = "root"; 
-        String password = "dinhthai2004"; 
+        String user = "root";
+        String password = "dinhthai2004";
         Connection connection = null;
         Statement statement = null;
+
         try {
-            Class.forName(jdbcDriver);
+            Class.forName(jdbcDriver); 
             connection = DriverManager.getConnection(jdbcURL, user, password);
-            System.out.println("Ket noi thanh cong!");
+            System.out.println("Kết nối thành công!");
+
             statement = connection.createStatement();
-         
-            
+
+  
+            String createStudentTableQuery = "create table if not exists cosodaotao.student "
+                + "("
+                + "id int auto_increment primary key,"
+                + "name varchar(50),"
+                + "studentid varchar(20),"
+                + "gender varchar(20),"
+                + "major varchar (50)"
+                + ")";
+            statement.executeUpdate(createStudentTableQuery);
+            System.out.println("Đã tạo thành công bảng student");
+            String createIndexQueryforStudentTable = "create index studentid_index ON student(studentid)";
+            statement.executeUpdate(createIndexQueryforStudentTable);
+            String createFacultyTableQuery = "create table if not exists cosodaotao.faculty "
+                + "("
+                + "id int auto_increment primary key,"
+                + "name varchar(50),"
+                + "facultyid varchar(20),"
+                + "gender varchar(20),"
+                + "department varchar (50)"
+                + ")";
+            statement.executeUpdate(createFacultyTableQuery);
+            System.out.println("Đã tạo thành công bảng faculty");
+            String createIndexQueryforFacultyTable = "create index facultyid_index ON faculty (facultyid)";
+            statement.executeUpdate(createIndexQueryforFacultyTable);
+            String createIndexQueryforFacultyTable2 = "create index name_index ON faculty (name)";
+            statement.executeUpdate(createIndexQueryforFacultyTable2);
+            String createCourseTableQuery = "create table if not exists cosodaotao.course "
+                + "("
+                + "id int auto_increment primary key,"
+                + "coursename varchar(50),"
+                + "coursecode varchar(20),"
+                + "facultyname varchar(50),"
+                + "foreign key (facultyname) references faculty(name)"
+                + "on delete cascade"
+                + ")";
+            statement.executeUpdate(createCourseTableQuery);
+            String createIndexQueryforCourseTable = "create index coursecode_index ON course (coursecode)";
+            statement.executeUpdate(createIndexQueryforCourseTable);
+            System.out.println("Đã tạo thành công bảng course");
+            String createPointTableQuery = "create table if not exists cosodaotao.point "
+            + "("
+            + "id int auto_increment primary key,"
+            + "point float,"
+            + "coursecode varchar(20),"
+            + "facultyid varchar(20),"
+            + "studentid varchar(20),"
+            + "foreign key (facultyid) references faculty(facultyid)"
+            + "on delete cascade,"
+            + "foreign key (studentid) references student(studentid)"
+            + "on delete cascade,"
+            + "foreign key (coursecode) references course(coursecode)"
+            + "on delete cascade"
+            + ")";
+            statement.executeUpdate(createPointTableQuery);
+            System.out.println("Đã tạo thành công bảng point");
+
+
         } catch (Exception e) {
             System.err.println(e);
+        } finally {
+         
+            try {
+                if (connection != null) {
+                    connection.close();
+                }
+            } catch (SQLException e) {
+                System.err.println("Lỗi đóng kết nối: " + e);
+            }
         }
     }
+
   
     public MainFrame() {
         enrollment = new Enrollment();

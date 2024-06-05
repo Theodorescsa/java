@@ -1,7 +1,6 @@
 import java.sql.*;
 import java.util.*;
 public class Main {
-
     final static String jdbcURL = "jdbc:mysql://localhost:3306/CoSoDaoTao";
     final static String jdbcDriver = "com.mysql.cj.jdbc.Driver"; 
 

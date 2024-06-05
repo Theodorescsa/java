@@ -84,21 +84,62 @@ public class ManageStudentsFrame extends JFrame {
                     connection = DriverManager.getConnection(jdbcURL, user, password);
                     System.out.println("Ket noi thanh cong toi bang Students!");
                     statement = connection.createStatement();
-                    // try {
-                    //     String createTableStudents = "create table if not exists cosodaotao.students("
-                    //     +   "StudentId int auto_increment primarykey,"
-                    //     +   "gender"
-
-                    //     ")";
-                    //     statement.executeUpdate(createTableStudents);
-                    // } catch (Exception r) {
-                    //     System.err.println(r);
-                    // }
-
                     if (!name.isEmpty() && !id.isEmpty() && !major.isEmpty() && (maleRadioButton.isSelected() || femaleRadioButton.isSelected())) {
-                        // String insertDataToStudents = "insert into cosodaotao.students ()"
-                        if (maleRadioButton.isSelected() || !femaleRadioButton.isSelected())students.add(new Student(name, id,true, major));
-                        if (!maleRadioButton.isSelected() || femaleRadioButton.isSelected())students.add(new Student(name, id, false, major));
+                        if (maleRadioButton.isSelected() && !femaleRadioButton.isSelected()){
+                            students.add(new Student(name, id,true, major));
+                            try {
+                                Class.forName(jdbcDriver);
+                                connection = DriverManager.getConnection(jdbcURL, user, password);
+                                System.out.println("Ket noi thanh cong!");
+                                statement = connection.createStatement();
+                                String checkTypeNameQuery = "select studentid from student where studentid = ?";
+                                PreparedStatement preparedStatement = connection.prepareStatement(checkTypeNameQuery);
+                                preparedStatement.setString(1, id);
+                                ResultSet resultSet = preparedStatement.executeQuery();
+                                // if (resultSet.next()) {
+                                    String insertToStudentTableQuery = "insert into student (name, studentid, gender, major) values (?, ?, ?, ?)";
+                                    preparedStatement = connection.prepareStatement(insertToStudentTableQuery);
+                                    preparedStatement.setString(1, name);
+                                    preparedStatement.setString(2, id);
+                                    preparedStatement.setString(3, "nam");
+                                    preparedStatement.setString(4, major);
+                                    preparedStatement.executeUpdate();
+                                    System.out.println("Them sinh vien vao co so du lieu thanh cong");
+                                // }
+                       
+
+                            } catch (Exception err) {
+                                System.out.println(err);
+                            }
+                        };
+                        if (!maleRadioButton.isSelected() && femaleRadioButton.isSelected()){
+                            students.add(new Student(name, id, false, major));
+                            try {
+                                Class.forName(jdbcDriver);
+                                connection = DriverManager.getConnection(jdbcURL, user, password);
+                                System.out.println("Ket noi thanh cong!");
+                                statement = connection.createStatement();
+                                String checkTypeNameQuery = "select studentid from student where studentid = ?";
+                                PreparedStatement preparedStatement = connection.prepareStatement(checkTypeNameQuery);
+                                preparedStatement.setString(1, id);
+                                ResultSet resultSet = preparedStatement.executeQuery();
+                                // if (resultSet.next()) {
+                                    String insertToStudentTableQuery = "insert into student (name, studentid, gender, major) values (?, ?, ?, ?)";
+                                    preparedStatement = connection.prepareStatement(insertToStudentTableQuery);
+                                    preparedStatement.setString(1, name);
+                                    preparedStatement.setString(2, id);
+                                    preparedStatement.setString(3, "nữ");
+                                    preparedStatement.setString(4, major);
+                                    preparedStatement.executeUpdate();
+                                    System.out.println("Them sinh vien vao co so du lieu thanh cong");
+
+                                // }
+                       
+
+                            } catch (Exception err) {
+                                System.out.println(err);
+                            }
+                        };
                         JOptionPane.showMessageDialog(null, "Student added successfully!");
                     } else {
                         JOptionPane.showMessageDialog(null, "Please fill in all fields!");
