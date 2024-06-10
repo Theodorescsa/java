@@ -80,9 +80,34 @@ public class ManageCoursesFrame extends JFrame {
                 if (student != null && course != null && getPoint != null) {
                     if (course.getEnrolledStudents().size() < course.getCapacity()) {
                         enrollment.enroll(student, course, getFloatPoint);
+                        try {
+                            Class.forName(jdbcDriver);
+                            connection = DriverManager.getConnection(jdbcURL, user, password);
+                            System.out.println("Ket noi thanh cong!");
+                            statement = connection.createStatement();
+                            String checkTypeNameQuery = "select coursecode from point where coursecode = ?";
+                            PreparedStatement preparedStatement = connection.prepareStatement(checkTypeNameQuery);
+                            preparedStatement.setString(1, courseCode);
+                            ResultSet resultSet = preparedStatement.executeQuery();
+                            // if (resultSet.next()) {
+                                String insertToCourseTableQuery = "insert into point (point, coursecode, facultyid, studentid) values (?, ?, ?, ?)";
+                                preparedStatement = connection.prepareStatement(insertToCourseTableQuery);
+                                preparedStatement.setFloat(1, getFloatPoint);
+                                preparedStatement.setString(2, course.getCourseCode());
+                                preparedStatement.setString(3, course.getFaculty().getId());
+                                preparedStatement.setString(4, student.getId());
+
+                                preparedStatement.executeUpdate();
+                                System.out.println("Them point vao co so du lieu thanh cong");
+                            // }
+                   
+
+                        } catch (Exception err2) {
+                            System.err.println(err2);
+                        }
                         JOptionPane.showMessageDialog(null, "Student enrolled successfully!");
                     } else {
-                        JOptionPane.showMessageDialog(null, "Course is full!");
+                        JOptionPane.showMessageDialog(null, "Point is full!");
                     }
                 } else {
                     JOptionPane.showMessageDialog(null, "Please select both student and course!");
