@@ -4,15 +4,16 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.sql.*;
+import java.util.*;;
 public class AddCourseFrame extends JFrame {
     private ArrayList<Course> courses;
     private ArrayList<Faculty> faculties;
     final static String jdbcURL = "jdbc:mysql://localhost:3306/CoSoDaoTao";
     final static String jdbcDriver = "com.mysql.cj.jdbc.Driver";
+    
     public AddCourseFrame(ArrayList<Course> courses, ArrayList<Faculty> faculties) {
         this.courses = courses;
         this.faculties = faculties;
-
         setTitle("Add Course");
         setSize(400, 300);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -26,10 +27,10 @@ public class AddCourseFrame extends JFrame {
         JLabel capacityLabel = new JLabel("Capacity:");
         JTextField capacityField = new JTextField();
         JLabel facultyLabel = new JLabel("Faculty:");
-        JComboBox<String> facultyComboBox = new JComboBox<>();
+        JComboBox<ComboBoxItem> facultyComboBox = new JComboBox<>();
 
         for (Faculty faculty : faculties) {
-            facultyComboBox.addItem(faculty.getId());
+            facultyComboBox.addItem(new ComboBoxItem(faculty.getId(), faculty.getName()));
         }
 
         inputPanel.add(courseNameLabel);
@@ -49,21 +50,25 @@ public class AddCourseFrame extends JFrame {
                 String courseName = courseNameField.getText();
                 String courseCode = courseCodeField.getText();
                 int capacity = Integer.parseInt(capacityField.getText());
-                String facultyId = (String) facultyComboBox.getSelectedItem();
+                ComboBoxItem selectedFacultyItem = (ComboBoxItem) facultyComboBox.getSelectedItem();
+                String facultyId = selectedFacultyItem.getId();
                 Faculty faculty = null;
-                String user = "root"; 
-                String password = "dinhthai2004"; 
+                String user = "root";
+                String password = "dinhthai2004";
                 Connection connection = null;
                 Statement statement = null;
+
                 for (Faculty f : faculties) {
                     if (f.getId().equals(facultyId)) {
                         faculty = f;
                         break;
                     }
                 }
+
                 try {
                     if (faculty != null && !courseName.isEmpty() && !courseCode.isEmpty()) {
                         courses.add(new Course(courseName, courseCode, capacity, faculty));
+           
                         JOptionPane.showMessageDialog(null, "Course added successfully!");
                         try {
                             Class.forName(jdbcDriver);
@@ -74,16 +79,14 @@ public class AddCourseFrame extends JFrame {
                             PreparedStatement preparedStatement = connection.prepareStatement(checkTypeNameQuery);
                             preparedStatement.setString(1, courseCode);
                             ResultSet resultSet = preparedStatement.executeQuery();
-                            // if (resultSet.next()) {
-                                String insertToCourseTableQuery = "insert into course (coursename, coursecode, facultyid) values (?, ?, ?)";
-                                preparedStatement = connection.prepareStatement(insertToCourseTableQuery);
-                                preparedStatement.setString(1, courseName);
-                                preparedStatement.setString(2, courseCode);
-                                preparedStatement.setString(3, faculty.getId());
-                                preparedStatement.executeUpdate();
-                                System.out.println("Them course vao co so du lieu thanh cong");
-                            // }
-                   
+
+                            String insertToCourseTableQuery = "insert into course (coursename, coursecode, facultyid) values (?, ?, ?)";
+                            preparedStatement = connection.prepareStatement(insertToCourseTableQuery);
+                            preparedStatement.setString(1, courseName);
+                            preparedStatement.setString(2, courseCode);
+                            preparedStatement.setString(3, faculty.getId());
+                            preparedStatement.executeUpdate();
+                            System.out.println("Them course vao co so du lieu thanh cong");
 
                         } catch (Exception err2) {
                             System.err.println(err2);
@@ -101,5 +104,24 @@ public class AddCourseFrame extends JFrame {
         add(addButton, BorderLayout.SOUTH);
 
         setVisible(true);
+    }
+
+    private class ComboBoxItem {
+        private String id;
+        private String name;
+
+        public ComboBoxItem(String id, String name) {
+            this.id = id;
+            this.name = name;
+        }
+
+        public String getId() {
+            return id;
+        }
+
+        @Override
+        public String toString() {
+            return name + " (" + id + ")";
+        }
     }
 }

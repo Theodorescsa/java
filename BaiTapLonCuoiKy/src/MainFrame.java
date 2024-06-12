@@ -125,6 +125,10 @@ public class MainFrame extends JFrame {
         JButton addCourseButton = new JButton("Add Course");
         JButton manageCoursesButton = new JButton("Manage Courses");
         JButton displayAllButton = new JButton("Display All Information");
+        JButton displayAllStudentGpaButton = new JButton("Display All Student Gpa");
+        JButton displayAllFacultyCoursesButton = new JButton("Display All Courses Of Faculty");
+
+
 
         // Customize buttons
         customizeButton(manageStudentsButton);
@@ -132,12 +136,19 @@ public class MainFrame extends JFrame {
         customizeButton(addCourseButton);
         customizeButton(manageCoursesButton);
         customizeButton(displayAllButton);
+        customizeButton(displayAllStudentGpaButton);
+        customizeButton(displayAllFacultyCoursesButton);
+
+
 
         mainPanel.add(manageStudentsButton);
         mainPanel.add(manageFacultiesButton);
         mainPanel.add(addCourseButton);
         mainPanel.add(manageCoursesButton);
         mainPanel.add(displayAllButton);
+        mainPanel.add(displayAllStudentGpaButton);
+        mainPanel.add(displayAllFacultyCoursesButton);
+
 
         add(mainPanel, BorderLayout.CENTER);
 
@@ -173,6 +184,18 @@ public class MainFrame extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 new DisplayAllFrame(students, faculties, courses, enrollment);
+            }
+        });
+        displayAllStudentGpaButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                new GpaFrame(students, enrollment);
+            }
+        });
+        displayAllFacultyCoursesButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                new FacultyCoursesFrame(faculties,courses);
             }
         });
 

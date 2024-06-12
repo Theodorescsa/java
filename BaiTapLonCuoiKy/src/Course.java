@@ -5,7 +5,6 @@ public class Course {
     private String courseCode;
     private int capacity;
     private Faculty faculty;
-    private float pointOfStudents;
     private ArrayList<Student> enrolledStudents;
 
     public Course(String courseName, String courseCode, int capacity, Faculty faculty) {
@@ -33,13 +32,7 @@ public class Course {
         return faculty;
     }
 
-    public float getPointOfStudents() {
-        return pointOfStudents;
-    }
 
-    public void setPointOfStudents(float pointOfStudents) {
-        this.pointOfStudents = pointOfStudents;
-    }
 
     public ArrayList<Student> getEnrolledStudents() {
         return enrolledStudents;

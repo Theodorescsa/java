@@ -7,11 +7,16 @@ public class Enrollment {
     private HashMap<Course, HashMap<Student, Float>> coursePoints;
     public HashMap<String, HashMap<String, Float>> infoHashmap;
     public List<HashMap<Course, HashMap<Student, Float>>> listHashMap; 
+    private HashMap<Student, ArrayList<Float>> gpa;
+
+    private ArrayList<Course> courses;
+    private ArrayList<Student> students;
     public Enrollment() {
         enrollments = new HashMap<>();
         coursePoints = new HashMap<>();
         listHashMap = new ArrayList<>();
         infoHashmap = new HashMap<>();
+        gpa = new HashMap<>();
     }
 
     public void enroll(Student student, Course course, float point) {
@@ -22,6 +27,8 @@ public class Enrollment {
             coursePoints.get(course).put(student, point);
             infoHashmap.putIfAbsent(course.getCourseName(), new HashMap<>());
             infoHashmap.get(course.getCourseName()).put(student.getName(), point);
+            gpa.putIfAbsent(student, new ArrayList<>());
+            gpa.get(student).add(point);
             getCourses(student);
             getPoint(student, course);
             getStudentsPoints(course,student);
@@ -49,5 +56,12 @@ public class Enrollment {
         System.out.println(coursePoints.getOrDefault(course, new HashMap<>()).get(student));
         return coursePoints.getOrDefault(course, new HashMap<>());
     }
-
+    public float getStudentGPA(Student student) {
+        ArrayList<Float> listPoint = gpa.get(student);
+        float sum = 0;
+        for (Float point : listPoint) {
+            sum += point;
+        }
+        return sum / listPoint.size();
+    }
 }
