@@ -5,6 +5,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.sql.*;
+
 public class ManageStudentsFrame extends JFrame {
     private ArrayList<Student> students;
     final static String jdbcURL = "jdbc:mysql://localhost:3306/CoSoDaoTao";
@@ -18,59 +19,41 @@ public class ManageStudentsFrame extends JFrame {
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLayout(new BorderLayout());
 
-        JPanel inputPanel = new JPanel(new GridBagLayout());
-        GridBagConstraints gbc = new GridBagConstraints();
-        gbc.gridx = 0;
-        gbc.gridy = 0;
-        gbc.anchor = GridBagConstraints.WEST;
-        
+        JPanel inputPanel = new JPanel(new GridLayout(6, 2, 5, 5));
+
         JLabel nameLabel = new JLabel("Name:");
-        inputPanel.add(nameLabel, gbc);
-        
-        gbc.gridy++;
-        JTextField nameField = new JTextField(50);
-        inputPanel.add(nameField, gbc);
-        
-        gbc.gridy++;
+        JTextField nameField = new JTextField(20);
+
         JLabel idLabel = new JLabel("ID:");
-        inputPanel.add(idLabel, gbc);
-        
-        gbc.gridy++;
-        JTextField idField = new JTextField(50);
-        inputPanel.add(idField, gbc);
-        
-        gbc.gridy++;
+        JTextField idField = new JTextField(20);
+
         JLabel majorLabel = new JLabel("Major:");
-        inputPanel.add(majorLabel, gbc);
-        
-        gbc.gridy++;
-        JTextField majorField = new JTextField(50);
-        inputPanel.add(majorField, gbc);
-        
-        gbc.gridy++;
+        JTextField majorField = new JTextField(20);
+
         JLabel genderLabel = new JLabel("Gender:");
-        inputPanel.add(genderLabel, gbc);
-        
-        gbc.gridy++;
+        JPanel genderPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         JRadioButton maleRadioButton = new JRadioButton("Male");
-        inputPanel.add(maleRadioButton, gbc);
-        
-        gbc.gridy++;
         JRadioButton femaleRadioButton = new JRadioButton("Female");
-        inputPanel.add(femaleRadioButton, gbc);
-        
         ButtonGroup genderGroup = new ButtonGroup();
         genderGroup.add(maleRadioButton);
         genderGroup.add(femaleRadioButton);
-        
+        genderPanel.add(maleRadioButton);
+        genderPanel.add(femaleRadioButton);
+
+        inputPanel.add(nameLabel);
+        inputPanel.add(nameField);
+        inputPanel.add(idLabel);
+        inputPanel.add(idField);
+        inputPanel.add(majorLabel);
+        inputPanel.add(majorField);
+        inputPanel.add(genderLabel);
+        inputPanel.add(genderPanel);
 
         JButton addButton = new JButton("Add Student");
 
         addButton.addActionListener(new ActionListener() {
-            
             @Override
             public void actionPerformed(ActionEvent e) {
-
                 String name = nameField.getText();
                 String id = idField.getText();
                 String major = majorField.getText();
@@ -86,7 +69,7 @@ public class ManageStudentsFrame extends JFrame {
                     statement = connection.createStatement();
                     if (!name.isEmpty() && !id.isEmpty() && !major.isEmpty() && (maleRadioButton.isSelected() || femaleRadioButton.isSelected())) {
                         if (maleRadioButton.isSelected() && !femaleRadioButton.isSelected()){
-                            students.add(new Student(name, id,true, major));
+                            students.add(new Student(name, id, true, major));
                             try {
                                 Class.forName(jdbcDriver);
                                 connection = DriverManager.getConnection(jdbcURL, user, password);
@@ -96,18 +79,14 @@ public class ManageStudentsFrame extends JFrame {
                                 PreparedStatement preparedStatement = connection.prepareStatement(checkTypeNameQuery);
                                 preparedStatement.setString(1, id);
                                 ResultSet resultSet = preparedStatement.executeQuery();
-                                // if (resultSet.next()) {
-                                    String insertToStudentTableQuery = "insert into student (name, studentid, gender, major) values (?, ?, ?, ?)";
-                                    preparedStatement = connection.prepareStatement(insertToStudentTableQuery);
-                                    preparedStatement.setString(1, name);
-                                    preparedStatement.setString(2, id);
-                                    preparedStatement.setString(3, "nam");
-                                    preparedStatement.setString(4, major);
-                                    preparedStatement.executeUpdate();
-                                    System.out.println("Them sinh vien vao co so du lieu thanh cong");
-                                // }
-                       
-
+                                String insertToStudentTableQuery = "insert into student (name, studentid, gender, major) values (?, ?, ?, ?)";
+                                preparedStatement = connection.prepareStatement(insertToStudentTableQuery);
+                                preparedStatement.setString(1, name);
+                                preparedStatement.setString(2, id);
+                                preparedStatement.setString(3, "nam");
+                                preparedStatement.setString(4, major);
+                                preparedStatement.executeUpdate();
+                                System.out.println("Them sinh vien vao co so du lieu thanh cong");
                             } catch (Exception err) {
                                 System.out.println(err);
                             }
@@ -123,19 +102,14 @@ public class ManageStudentsFrame extends JFrame {
                                 PreparedStatement preparedStatement = connection.prepareStatement(checkTypeNameQuery);
                                 preparedStatement.setString(1, id);
                                 ResultSet resultSet = preparedStatement.executeQuery();
-                                // if (resultSet.next()) {
-                                    String insertToStudentTableQuery = "insert into student (name, studentid, gender, major) values (?, ?, ?, ?)";
-                                    preparedStatement = connection.prepareStatement(insertToStudentTableQuery);
-                                    preparedStatement.setString(1, name);
-                                    preparedStatement.setString(2, id);
-                                    preparedStatement.setString(3, "nữ");
-                                    preparedStatement.setString(4, major);
-                                    preparedStatement.executeUpdate();
-                                    System.out.println("Them sinh vien vao co so du lieu thanh cong");
-
-                                // }
-                       
-
+                                String insertToStudentTableQuery = "insert into student (name, studentid, gender, major) values (?, ?, ?, ?)";
+                                preparedStatement = connection.prepareStatement(insertToStudentTableQuery);
+                                preparedStatement.setString(1, name);
+                                preparedStatement.setString(2, id);
+                                preparedStatement.setString(3, "nu");
+                                preparedStatement.setString(4, major);
+                                preparedStatement.executeUpdate();
+                                System.out.println("Them sinh vien vao co so du lieu thanh cong");
                             } catch (Exception err) {
                                 System.out.println(err);
                             }

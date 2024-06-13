@@ -4,11 +4,11 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
-public class FilterPersonFrame extends JFrame {
+public class EditPersonFrame extends JFrame {
     private ArrayList<Student> students;
     private ArrayList<Faculty> faculties;
 
-    public FilterPersonFrame(ArrayList<Student> students, ArrayList<Faculty> faculties) {
+    public EditPersonFrame(ArrayList<Student> students, ArrayList<Faculty> faculties) {
         this.students = students;
         this.faculties = faculties;
 
@@ -21,8 +21,8 @@ public class FilterPersonFrame extends JFrame {
         mainPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
         mainPanel.setBackground(new Color(240, 240, 240));  
 
-        JButton SearchStudentButton = new JButton("Search Student");
-        JButton SearchFacultyButton = new JButton("Search Faculty");
+        JButton SearchStudentButton = new JButton("Update Student");
+        JButton SearchFacultyButton = new JButton("Update Faculty");
 
         customizeButton(SearchStudentButton);
         customizeButton(SearchFacultyButton);
@@ -35,14 +35,14 @@ public class FilterPersonFrame extends JFrame {
         SearchFacultyButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                new DisplaySearchResultFrame(faculties);
+                new EditPersonInfo(students,faculties,false);
             }
         });
         
         SearchStudentButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                new DisplaySearchResultFrame(students,faculties);
+                new EditPersonInfo(students,faculties,true);
             }
         });
         setVisible(true);

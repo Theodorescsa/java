@@ -5,7 +5,9 @@ public class Student extends Person {
         super(name, id, gender);
         this.major = major;
     }
-
+    public void setMajor(String major) {
+        this.major = major;
+    }
     public String getMajor() {
         return major;
     }

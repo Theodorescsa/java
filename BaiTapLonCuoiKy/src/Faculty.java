@@ -8,6 +8,9 @@ public class Faculty extends Person {
         this.department = department;
         this.courses = new ArrayList<>();
     }
+    public void setDepartment(String department) {
+        this.department = department;
+    }
     public String getDepartment() {
         return department;
     }

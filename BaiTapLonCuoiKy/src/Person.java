@@ -9,6 +9,17 @@ public abstract class Person {
         this.gender = gender;
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+    public void setGender(boolean gender) {
+        this.gender = gender;
+    }
+
     public String getName() {
         return name;
     }

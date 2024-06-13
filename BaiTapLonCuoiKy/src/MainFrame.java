@@ -127,7 +127,11 @@ public class MainFrame extends JFrame {
         JButton displayAllButton = new JButton("Display All Information");
         JButton displayAllStudentGpaButton = new JButton("Display All Student Gpa");
         JButton displayAllFacultyCoursesButton = new JButton("Display All Courses Of Faculty");
-        JButton FilterPersonFrame = new JButton("Filter Person Frame");
+        JButton FilterPersonFrame = new JButton("Filter Person");
+        JButton EditPersonFrame = new JButton("Edit Person");
+        JButton DeleteInfomationFrame = new JButton("Delete Infomation");
+
+
 
 
 
@@ -141,6 +145,10 @@ public class MainFrame extends JFrame {
         customizeButton(displayAllStudentGpaButton);
         customizeButton(displayAllFacultyCoursesButton);
         customizeButton(FilterPersonFrame);
+        customizeButton(EditPersonFrame);
+        customizeButton(DeleteInfomationFrame);
+        
+
 
 
 
@@ -153,6 +161,10 @@ public class MainFrame extends JFrame {
         mainPanel.add(displayAllStudentGpaButton);
         mainPanel.add(displayAllFacultyCoursesButton);
         mainPanel.add(FilterPersonFrame);
+        mainPanel.add(EditPersonFrame);
+        mainPanel.add(DeleteInfomationFrame);
+
+
 
 
 
@@ -208,6 +220,19 @@ public class MainFrame extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 new FilterPersonFrame(students,faculties);
+            }
+        });
+        EditPersonFrame.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                new EditPersonFrame(students,faculties);
+            }
+        });
+        
+        DeleteInfomationFrame.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                new DeleteInfomationFrame(students,faculties,courses);
             }
         });
 

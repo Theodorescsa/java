@@ -4,14 +4,15 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
-public class FilterPersonFrame extends JFrame {
+public class DeleteInfomationFrame extends JFrame {
     private ArrayList<Student> students;
     private ArrayList<Faculty> faculties;
+    private ArrayList<Course> courses;
 
-    public FilterPersonFrame(ArrayList<Student> students, ArrayList<Faculty> faculties) {
+    public DeleteInfomationFrame(ArrayList<Student> students, ArrayList<Faculty> faculties,ArrayList<Course> courses) {
         this.students = students;
         this.faculties = faculties;
-
+        this.courses = courses;
         setTitle("Filter Person");
         setSize(800, 800);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -21,28 +22,40 @@ public class FilterPersonFrame extends JFrame {
         mainPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
         mainPanel.setBackground(new Color(240, 240, 240));  
 
-        JButton SearchStudentButton = new JButton("Search Student");
-        JButton SearchFacultyButton = new JButton("Search Faculty");
+        JButton DeleteStudentButton = new JButton("Delete Student");
+        JButton DeleteFacultyButton = new JButton("Delete Faculty");
+        JButton DeleteCourseButton = new JButton("Delete Course");
 
-        customizeButton(SearchStudentButton);
-        customizeButton(SearchFacultyButton);
 
-        mainPanel.add(SearchFacultyButton);
-        mainPanel.add(SearchStudentButton);
+        customizeButton(DeleteStudentButton);
+        customizeButton(DeleteFacultyButton);
+        customizeButton(DeleteCourseButton);
+
+
+        mainPanel.add(DeleteFacultyButton);
+        mainPanel.add(DeleteStudentButton);
+        mainPanel.add(DeleteCourseButton);
+
 
         add(mainPanel, BorderLayout.CENTER);
         
-        SearchFacultyButton.addActionListener(new ActionListener() {
+        DeleteFacultyButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                new DisplaySearchResultFrame(faculties);
+                new DeleteInfo(students,faculties,courses,1);
             }
         });
         
-        SearchStudentButton.addActionListener(new ActionListener() {
+        DeleteStudentButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                new DisplaySearchResultFrame(students,faculties);
+                new DeleteInfo(students,faculties,courses,0);
+            }
+        });
+        DeleteCourseButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                new DeleteInfo(students,faculties,courses,2);
             }
         });
         setVisible(true);
