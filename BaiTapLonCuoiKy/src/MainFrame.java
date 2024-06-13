@@ -127,6 +127,8 @@ public class MainFrame extends JFrame {
         JButton displayAllButton = new JButton("Display All Information");
         JButton displayAllStudentGpaButton = new JButton("Display All Student Gpa");
         JButton displayAllFacultyCoursesButton = new JButton("Display All Courses Of Faculty");
+        JButton FilterPersonFrame = new JButton("Filter Person Frame");
+
 
 
 
@@ -138,6 +140,8 @@ public class MainFrame extends JFrame {
         customizeButton(displayAllButton);
         customizeButton(displayAllStudentGpaButton);
         customizeButton(displayAllFacultyCoursesButton);
+        customizeButton(FilterPersonFrame);
+
 
 
 
@@ -148,6 +152,8 @@ public class MainFrame extends JFrame {
         mainPanel.add(displayAllButton);
         mainPanel.add(displayAllStudentGpaButton);
         mainPanel.add(displayAllFacultyCoursesButton);
+        mainPanel.add(FilterPersonFrame);
+
 
 
         add(mainPanel, BorderLayout.CENTER);
@@ -196,6 +202,12 @@ public class MainFrame extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 new FacultyCoursesFrame(faculties,courses);
+            }
+        });
+        FilterPersonFrame.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                new FilterPersonFrame(students,faculties);
             }
         });
 
