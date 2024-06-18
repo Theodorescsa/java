@@ -4,13 +4,13 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.sql.*;
-import java.util.*;;
+
 public class AddCourseFrame extends JFrame {
     private ArrayList<Course> courses;
     private ArrayList<Faculty> faculties;
     final static String jdbcURL = "jdbc:mysql://localhost:3306/CoSoDaoTao";
     final static String jdbcDriver = "com.mysql.cj.jdbc.Driver";
-    
+
     public AddCourseFrame(ArrayList<Course> courses, ArrayList<Faculty> faculties) {
         this.courses = courses;
         this.faculties = faculties;
@@ -29,8 +29,36 @@ public class AddCourseFrame extends JFrame {
         JLabel facultyLabel = new JLabel("Faculty:");
         JComboBox<ComboBoxItem> facultyComboBox = new JComboBox<>();
 
-        for (Faculty faculty : faculties) {
-            facultyComboBox.addItem(new ComboBoxItem(faculty.getId(), faculty.getName()));
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+
+        try {
+            connection = DriverManager.getConnection(jdbcURL, "root", "dinhthai2004");
+            String query = "SELECT * FROM faculty";
+            preparedStatement = connection.prepareStatement(query);
+            resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()) {
+                String id = resultSet.getString("facultyid");
+                String name = resultSet.getString("name");
+                facultyComboBox.addItem(new ComboBoxItem(id, name));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (resultSet != null) {
+                    resultSet.close();
+                }
+                if (preparedStatement != null) {
+                    preparedStatement.close();
+                }
+                if (connection != null) {
+                    connection.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
 
         inputPanel.add(courseNameLabel);
@@ -52,44 +80,64 @@ public class AddCourseFrame extends JFrame {
                 int capacity = Integer.parseInt(capacityField.getText());
                 ComboBoxItem selectedFacultyItem = (ComboBoxItem) facultyComboBox.getSelectedItem();
                 String facultyId = selectedFacultyItem.getId();
-                Faculty faculty = null;
+                // Faculty faculty = null;
                 String user = "root";
                 String password = "dinhthai2004";
                 Connection connection = null;
-                Statement statement = null;
+                PreparedStatement preparedStatement = null;
 
                 for (Faculty f : faculties) {
-                    if (f.getId().equals(facultyId)) {
-                        faculty = f;
-                        break;
-                    }
+                    // if (f.getId().equals(facultyId)) {
+                    //     faculty = f;
+                    //     break;
+                    // }
                 }
 
                 try {
-                    if (faculty != null && !courseName.isEmpty() && !courseCode.isEmpty()) {
-                        courses.add(new Course(courseName, courseCode, capacity, faculty));
-           
-                        JOptionPane.showMessageDialog(null, "Course added successfully!");
+                    if (true) {
                         try {
                             Class.forName(jdbcDriver);
                             connection = DriverManager.getConnection(jdbcURL, user, password);
-                            System.out.println("Ket noi thanh cong!");
-                            statement = connection.createStatement();
-                            String checkTypeNameQuery = "select coursecode from course where coursecode = ?";
-                            PreparedStatement preparedStatement = connection.prepareStatement(checkTypeNameQuery);
+                            System.out.println("Connected to the database!");
+
+                            String checkCourseCodeQuery = "SELECT coursecode FROM course WHERE coursecode = ?";
+                            preparedStatement = connection.prepareStatement(checkCourseCodeQuery);
                             preparedStatement.setString(1, courseCode);
                             ResultSet resultSet = preparedStatement.executeQuery();
 
-                            String insertToCourseTableQuery = "insert into course (coursename, coursecode, facultyid) values (?, ?, ?)";
-                            preparedStatement = connection.prepareStatement(insertToCourseTableQuery);
-                            preparedStatement.setString(1, courseName);
-                            preparedStatement.setString(2, courseCode);
-                            preparedStatement.setString(3, faculty.getId());
-                            preparedStatement.executeUpdate();
-                            System.out.println("Them course vao co so du lieu thanh cong");
+                            if (resultSet.next()) {
+                                // Course code already exists
+                                JOptionPane.showMessageDialog(null, "Course Code already exists. Please enter a different Course Code.");
+                            } else {
+                                // Course code does not exist, proceed to insert
+                                String insertCourseQuery = "INSERT INTO course (coursename, coursecode, capacity, facultyid) VALUES (?, ?, ?, ?)";
+                                preparedStatement = connection.prepareStatement(insertCourseQuery);
+                                preparedStatement.setString(1, courseName);
+                                preparedStatement.setString(2, courseCode);
+                                preparedStatement.setInt(3, capacity);
+                                preparedStatement.setString(4, facultyId);
 
+                                preparedStatement.executeUpdate();
+                                System.out.println("Course added to the database successfully!");
+
+                                // Add to local list
+                                // courses.add(new Course(courseName, courseCode, capacity, faculty));
+
+                                JOptionPane.showMessageDialog(null, "Course added successfully!");
+                            }
                         } catch (Exception err2) {
                             System.err.println(err2);
+                        } finally {
+                            try {
+                                if (preparedStatement != null) {
+                                    preparedStatement.close();
+                                }
+                                if (connection != null) {
+                                    connection.close();
+                                }
+                            } catch (SQLException sqlException) {
+                                sqlException.printStackTrace();
+                            }
                         }
                     } else {
                         JOptionPane.showMessageDialog(null, "Please fill in all fields!");

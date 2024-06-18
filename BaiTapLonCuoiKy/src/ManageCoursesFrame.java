@@ -40,6 +40,40 @@ public class ManageCoursesFrame extends JFrame {
         for (Course course : courses) {
             courseComboBox.addItem(new ComboBoxItem(course.getCourseCode(), course.getCourseName()));
         }
+        String user = "root";
+        String password = "dinhthai2004";
+        Connection connection = null;
+        try {
+            connection = DriverManager.getConnection(jdbcURL, user, password);
+
+            // Lấy dữ liệu sinh viên từ cơ sở dữ liệu
+            String studentQuery = "SELECT * FROM student";
+            PreparedStatement studentStatement = connection.prepareStatement(studentQuery);
+            ResultSet studentResultSet = studentStatement.executeQuery();
+            while (studentResultSet.next()) {
+                String id = studentResultSet.getString("studentid");
+                String name = studentResultSet.getString("name");
+                studentComboBox.addItem(new ComboBoxItem(id, name));
+            }
+
+            // Lấy dữ liệu khóa học từ cơ sở dữ liệu
+            String courseQuery = "SELECT * FROM course";
+            PreparedStatement courseStatement = connection.prepareStatement(courseQuery);
+            ResultSet courseResultSet = courseStatement.executeQuery();
+            while (courseResultSet.next()) {
+                String code = courseResultSet.getString("coursecode");
+                String name = courseResultSet.getString("coursename");
+                courseComboBox.addItem(new ComboBoxItem(code, name));
+            }
+
+            // Đóng kết nối
+            connection.close();
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+
+        // Thêm ActionListener cho nút enrollButton
+    
 
         enrollPanel.add(studentLabel);
         enrollPanel.add(studentComboBox);

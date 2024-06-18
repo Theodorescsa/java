@@ -15,19 +15,28 @@ public class Course {
         this.enrolledStudents = new ArrayList<>();
         this.faculty.addCourse(this);
     }
+    public void setCourseName(String name) {
+        this.courseName = name;
+    }
 
     public String getCourseName() {
         return courseName;
     }
-
+    public void setCourseCode(String code) {
+        this.courseCode = code;
+    }
     public String getCourseCode() {
         return courseCode;
     }
-
+    public void setCourseCapacity(int quantity) {
+        this.capacity = quantity;
+    }
     public int getCapacity() {
         return capacity;
     }
-
+    public void setCourseFaculty(Faculty faculty) {
+        this.faculty = faculty;
+    }
     public Faculty getFaculty() {
         return faculty;
     }

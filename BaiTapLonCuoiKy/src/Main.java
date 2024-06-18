@@ -109,6 +109,5 @@ public class Main {
         faculty1.displayInfo();
         course1.displayCourseInfo();
         System.out.println("Ten khoa hoc|GiangVien|Ten Sinh Vien|Diem");
-        System.out.println(enrollment.infoHashmap);
     }
 }

@@ -12,7 +12,7 @@ public class DeleteInfo extends JFrame {
     final static String jdbcURL = "jdbc:mysql://localhost:3306/CoSoDaoTao";
     final static String jdbcDriver = "com.mysql.cj.jdbc.Driver";
 
-    public DeleteInfo(ArrayList<Student> students, ArrayList<Faculty> faculties,ArrayList<Course> courses, int isStudent) {
+    public DeleteInfo(ArrayList<Student> students, ArrayList<Faculty> faculties, ArrayList<Course> courses, int isStudent) {
         this.students = students;
         this.faculties = faculties;
         this.courses = courses;
@@ -40,54 +40,75 @@ public class DeleteInfo extends JFrame {
         inputPanel.add(keywordidLabel);
         inputPanel.add(keywordidField);
         inputPanel.add(filterButton);
-     
+
         filterButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 String id = keywordidField.getText();
                 boolean found = false;
-                for (Faculty f : faculties) {
-                    if (f.getId().equals(id)) {
+                Connection connection = null;
+                PreparedStatement checkFacultyStatement = null;
+                ResultSet facultyResult = null;
+
+                try {
+                    connection = DriverManager.getConnection(jdbcURL, "root", "dinhthai2004");
+                    String checkFacultyQuery = "SELECT * FROM faculty WHERE facultyId = ?";
+                    checkFacultyStatement = connection.prepareStatement(checkFacultyQuery);
+                    checkFacultyStatement.setString(1, id);
+                    facultyResult = checkFacultyStatement.executeQuery();
+
+                    if (facultyResult.next()) {
                         found = true;
+                    }
+                } catch (SQLException ex) {
+                    ex.printStackTrace();
+                } finally {
+                    try {
+                        if (facultyResult != null) facultyResult.close();
+                        if (checkFacultyStatement != null) checkFacultyStatement.close();
+                        if (connection != null) connection.close();
+                    } catch (SQLException ex) {
+                        ex.printStackTrace();
                     }
                 }
 
                 if (found) {
-                    JButton deleteButton = new JButton("delete Faculty");
+                    JButton deleteButton = new JButton("Delete Faculty");
                     deleteButton.addActionListener(new ActionListener() {
                         @Override
                         public void actionPerformed(ActionEvent e) {
-                      
-                            String user = "root"; 
-                            String password = "dinhthai2004"; 
                             Connection connection = null;
-                            Statement statement = null;
-                            for (Faculty f : faculties) {
-                                if (f.getId().equals(id)) {
-                                    faculties.remove(f);
-                                    try {
-                                        Class.forName(jdbcDriver);
-                                        connection = DriverManager.getConnection(jdbcURL, user, password);
-                                        System.out.println("Connected to Faculty table successfully!");
-                                        String deleteFacultyQuery = "DELETE FROM faculty WHERE facultyid = ?";
-                                        PreparedStatement preparedStatement = connection.prepareStatement(deleteFacultyQuery);
-                                        preparedStatement.setString(1, id);
-                                        preparedStatement.executeUpdate();
-                                        System.out.println("Deleted faculty from database successfully");
-                                    } catch (Exception err) {
-                                        System.out.println(err);
-                                    } finally {
-                                        try {
-                                            if (statement != null) statement.close();
-                                            if (connection != null) connection.close();
-                                        } catch (Exception err) {
-                                            System.out.println(err);
+                            PreparedStatement deleteFacultyStatement = null;
+
+                            try {
+                                connection = DriverManager.getConnection(jdbcURL, "root", "dinhthai2004");
+                                String deleteFacultyQuery = "DELETE FROM faculty WHERE facultyid = ?";
+                                deleteFacultyStatement = connection.prepareStatement(deleteFacultyQuery);
+                                deleteFacultyStatement.setString(1, id);
+                                int rowsAffected = deleteFacultyStatement.executeUpdate();
+
+                                // Remove the faculty from the ArrayList if deleted from database
+                                if (rowsAffected > 0) {
+                                    for (Faculty f : faculties) {
+                                        if (f.getId().equals(id)) {
+                                            faculties.remove(f);
+                                            break;
                                         }
                                     }
-                                    break;
+                                }
+                                
+                                JOptionPane.showMessageDialog(null, "Faculty updated successfully!");
+                            } catch (SQLException ex) {
+                                ex.printStackTrace();
+                                JOptionPane.showMessageDialog(null, "Error updating faculty in the database.");
+                            } finally {
+                                try {
+                                    if (deleteFacultyStatement != null) deleteFacultyStatement.close();
+                                    if (connection != null) connection.close();
+                                } catch (SQLException ex) {
+                                    ex.printStackTrace();
                                 }
                             }
-                            JOptionPane.showMessageDialog(null, "Faculty updated successfully!");
                         }
                     });
 
@@ -103,69 +124,88 @@ public class DeleteInfo extends JFrame {
         add(inputPanel, BorderLayout.NORTH);
     }
 
+
     private void setupStudentUI() {
         JPanel inputPanel = new JPanel(new GridLayout(7, 2, 5, 5));
-
+    
         JLabel keywordidLabel = new JLabel("Enter ID:");
         JTextField keywordidField = new JTextField(20);
         JButton filterButton = new JButton("Delete");
         inputPanel.add(keywordidLabel);
         inputPanel.add(keywordidField);
         inputPanel.add(filterButton);
-
+    
         filterButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 String id = keywordidField.getText();
                 boolean found = false;
-                for (Student s : students) {
-                    if (s.getId().equals(id)) {
+                Connection connection = null;
+                PreparedStatement checkStudentStatement = null;
+                ResultSet studentResult = null;
+    
+                try {
+                    connection = DriverManager.getConnection(jdbcURL, "root", "dinhthai2004");
+                    String checkStudentQuery = "SELECT * FROM student WHERE studentId = ?";
+                    checkStudentStatement = connection.prepareStatement(checkStudentQuery);
+                    checkStudentStatement.setString(1, id);
+                    studentResult = checkStudentStatement.executeQuery();
+    
+                    if (studentResult.next()) {
                         found = true;
                     }
+                } catch (SQLException ex) {
+                    ex.printStackTrace();
+                } finally {
+                    try {
+                        if (studentResult != null) studentResult.close();
+                        if (checkStudentStatement != null) checkStudentStatement.close();
+                        if (connection != null) connection.close();
+                    } catch (SQLException ex) {
+                        ex.printStackTrace();
+                    }
                 }
-
+    
                 if (found) {
-                  
-
-                    JButton deleteButton = new JButton("delete Student");
+                    JButton deleteButton = new JButton("Delete Student");
                     deleteButton.addActionListener(new ActionListener() {
                         @Override
                         public void actionPerformed(ActionEvent e) {
-                            
-                            String user = "root"; 
-                            String password = "dinhthai2004"; 
                             Connection connection = null;
-                            Statement statement = null;
-                            for (Student s : students) {
-                                if (s.getId().equals(id)) {
-                                    students.remove(s);
-                                    try {
-                                        Class.forName(jdbcDriver);
-                                        connection = DriverManager.getConnection(jdbcURL, user, password);
-                                        System.out.println("Connected to student table successfully!");
-                                        String deleteFacultyQuery = "DELETE FROM student WHERE studentid = ?";
-                                        PreparedStatement preparedStatement = connection.prepareStatement(deleteFacultyQuery);
-                                        preparedStatement.setString(1, id);
-                                        preparedStatement.executeUpdate();
-                                        System.out.println("Deleted student from database successfully");
-                                    } catch (Exception err) {
-                                        System.out.println(err);
-                                    } finally {
-                                        try {
-                                            if (statement != null) statement.close();
-                                            if (connection != null) connection.close();
-                                        } catch (Exception err) {
-                                            System.out.println(err);
+                            PreparedStatement deleteStudentStatement = null;
+    
+                            try {
+                                connection = DriverManager.getConnection(jdbcURL, "root", "dinhthai2004");
+                                String deleteStudentQuery = "DELETE FROM student WHERE studentid = ?";
+                                deleteStudentStatement = connection.prepareStatement(deleteStudentQuery);
+                                deleteStudentStatement.setString(1, id);
+                                int rowsAffected = deleteStudentStatement.executeUpdate();
+    
+                                // Remove the student from the ArrayList if deleted from database
+                                if (rowsAffected > 0) {
+                                    for (Student s : students) {
+                                        if (s.getId().equals(id)) {
+                                            students.remove(s);
+                                            break;
                                         }
                                     }
-                                    JOptionPane.showMessageDialog(null, "Student deleted successfully!");
-                                    break;
+                                }
+    
+                                JOptionPane.showMessageDialog(null, "Student deleted successfully!");
+                            } catch (SQLException ex) {
+                                ex.printStackTrace();
+                                JOptionPane.showMessageDialog(null, "Error deleting student from the database.");
+                            } finally {
+                                try {
+                                    if (deleteStudentStatement != null) deleteStudentStatement.close();
+                                    if (connection != null) connection.close();
+                                } catch (SQLException ex) {
+                                    ex.printStackTrace();
                                 }
                             }
-                            JOptionPane.showMessageDialog(null, "Student updated successfully!");
                         }
                     });
-
+    
                     add(inputPanel, BorderLayout.CENTER);
                     add(deleteButton, BorderLayout.SOUTH);
                     revalidate();
@@ -177,69 +217,88 @@ public class DeleteInfo extends JFrame {
         });
         add(inputPanel, BorderLayout.NORTH);
     }
+    
     private void setupCourseUI() {
         JPanel inputPanel = new JPanel(new GridLayout(7, 2, 5, 5));
-
-        JLabel keywordidLabel = new JLabel("Enter Coursecode:");
+    
+        JLabel keywordidLabel = new JLabel("Enter Course Code:");
         JTextField keywordidField = new JTextField(20);
         JButton filterButton = new JButton("Delete");
         inputPanel.add(keywordidLabel);
         inputPanel.add(keywordidField);
         inputPanel.add(filterButton);
-
+    
         filterButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 String code = keywordidField.getText();
                 boolean found = false;
-                for (Course c : courses) {
-                    if (c.getCourseCode().equals(code)) {
+                Connection connection = null;
+                PreparedStatement checkCourseStatement = null;
+                ResultSet courseResult = null;
+    
+                try {
+                    connection = DriverManager.getConnection(jdbcURL, "root", "dinhthai2004");
+                    String checkCourseQuery = "SELECT * FROM course WHERE courseCode = ?";
+                    checkCourseStatement = connection.prepareStatement(checkCourseQuery);
+                    checkCourseStatement.setString(1, code);
+                    courseResult = checkCourseStatement.executeQuery();
+    
+                    // if (courseResult.next()) {
                         found = true;
+                    // }
+                } catch (SQLException ex) {
+                    ex.printStackTrace();
+                } finally {
+                    try {
+                        if (courseResult != null) courseResult.close();
+                        if (checkCourseStatement != null) checkCourseStatement.close();
+                        if (connection != null) connection.close();
+                    } catch (SQLException ex) {
+                        ex.printStackTrace();
                     }
                 }
-
+    
                 if (found) {
-                  
-
-                    JButton deleteButton = new JButton("delete course");
+                    JButton deleteButton = new JButton("Delete Course");
                     deleteButton.addActionListener(new ActionListener() {
                         @Override
                         public void actionPerformed(ActionEvent e) {
-                            
-                            String user = "root"; 
-                            String password = "dinhthai2004"; 
                             Connection connection = null;
-                            Statement statement = null;
-                            for (Course c : courses) {
-                                if (c.getCourseCode().equals(code)) {
-                                    students.remove(c);
-                                    try {
-                                        Class.forName(jdbcDriver);
-                                        connection = DriverManager.getConnection(jdbcURL, user, password);
-                                        System.out.println("Connected to course table successfully!");
-                                        String deleteFacultyQuery = "DELETE FROM course WHERE coursecode = ?";
-                                        PreparedStatement preparedStatement = connection.prepareStatement(deleteFacultyQuery);
-                                        preparedStatement.setString(1, code);
-                                        preparedStatement.executeUpdate();
-                                        System.out.println("Deleted course from database successfully");
-                                    } catch (Exception err) {
-                                        System.out.println(err);
-                                    } finally {
-                                        try {
-                                            if (statement != null) statement.close();
-                                            if (connection != null) connection.close();
-                                        } catch (Exception err) {
-                                            System.out.println(err);
+                            PreparedStatement deleteCourseStatement = null;
+    
+                            try {
+                                connection = DriverManager.getConnection(jdbcURL, "root", "dinhthai2004");
+                                String deleteCourseQuery = "DELETE FROM course WHERE courseCode = ?";
+                                deleteCourseStatement = connection.prepareStatement(deleteCourseQuery);
+                                deleteCourseStatement.setString(1, code);
+                                int rowsAffected = deleteCourseStatement.executeUpdate();
+    
+                                // Remove the course from the ArrayList if deleted from database
+                                if (rowsAffected > 0) {
+                                    for (Course c : courses) {
+                                        if (c.getCourseCode().equals(code)) {
+                                            courses.remove(c);
+                                            break;
                                         }
                                     }
-                                    JOptionPane.showMessageDialog(null, "Course deleted successfully!");
-                                    break;
+                                }
+    
+                                JOptionPane.showMessageDialog(null, "Course deleted successfully!");
+                            } catch (SQLException ex) {
+                                ex.printStackTrace();
+                                JOptionPane.showMessageDialog(null, "Error deleting course from the database.");
+                            } finally {
+                                try {
+                                    if (deleteCourseStatement != null) deleteCourseStatement.close();
+                                    if (connection != null) connection.close();
+                                } catch (SQLException ex) {
+                                    ex.printStackTrace();
                                 }
                             }
-                            JOptionPane.showMessageDialog(null, "Course updated successfully!");
                         }
                     });
-
+    
                     add(inputPanel, BorderLayout.CENTER);
                     add(deleteButton, BorderLayout.SOUTH);
                     revalidate();
@@ -251,4 +310,5 @@ public class DeleteInfo extends JFrame {
         });
         add(inputPanel, BorderLayout.NORTH);
     }
+    
 }

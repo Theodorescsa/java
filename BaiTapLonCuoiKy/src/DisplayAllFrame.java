@@ -1,64 +1,138 @@
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
 import java.awt.*;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.util.ArrayList;
 
 public class DisplayAllFrame extends JFrame {
-    private ArrayList<Student> students;
-    private ArrayList<Faculty> faculties;
-    private ArrayList<Course> courses;
 
-    public DisplayAllFrame(ArrayList<Student> students, ArrayList<Faculty> faculties, ArrayList<Course> courses, Enrollment enrollment) {
-        this.students = students;
-        this.faculties = faculties;
-        this.courses = courses;
-
+    public DisplayAllFrame() {
         setTitle("Display All Information");
-        setSize(600, 400);
+        setSize(800, 600);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLayout(new BorderLayout());
 
-        JTextArea textArea = new JTextArea();
-        JScrollPane scrollPane = new JScrollPane(textArea);
-        textArea.setEditable(false);
+        JTabbedPane tabbedPane = new JTabbedPane();
 
-        StringBuilder sb = new StringBuilder();
+        // Students Table
+        String[] studentColumns = {"Name", "ID", "Major", "Gender"};
+        DefaultTableModel studentTableModel = new DefaultTableModel(studentColumns, 0);
+        JTable studentTable = new JTable(studentTableModel);
+        JScrollPane studentScrollPane = new JScrollPane(studentTable);
+        tabbedPane.addTab("Students", studentScrollPane);
 
-        sb.append("Students:\n");
-        for (Student student : students) {
-            sb.append(student.getName()).append(", ID: ").append(student.getId()).append(", Major: ").append(student.getMajor()).append(", Gender").append(student.getGender()).append("\n");
-        }
+        // Faculties Table
+        String[] facultyColumns = {"Name", "ID", "Department", "Gender"};
+        DefaultTableModel facultyTableModel = new DefaultTableModel(facultyColumns, 0);
+        JTable facultyTable = new JTable(facultyTableModel);
+        JScrollPane facultyScrollPane = new JScrollPane(facultyTable);
+        tabbedPane.addTab("Faculties", facultyScrollPane);
 
-        sb.append("\nFaculties:\n");
-        for (Faculty faculty : faculties) {
-            sb.append("Name: ").append(faculty.getName()).append(", ID: ").append(faculty.getId()).append(", Department: ").append(faculty.getDepartment()).append(", Gender").append(faculty.getGender()).append("\n");
-        }
+        // Courses and Enrollment Table
+        String[] courseEnrollmentColumns = {"Course Name", "Course Code", "Capacity", "Faculty Name", "Faculty Department", "Student Name", "Point"};
+        DefaultTableModel courseEnrollmentTableModel = new DefaultTableModel(courseEnrollmentColumns, 0);
+        JTable courseEnrollmentTable = new JTable(courseEnrollmentTableModel);
+        JScrollPane courseEnrollmentScrollPane = new JScrollPane(courseEnrollmentTable);
+        tabbedPane.addTab("Courses & Enrollments", courseEnrollmentScrollPane);
 
-        sb.append("\nCourses:\n");
-        for (int i = 0; i< courses.size();i++) {
-            sb.append("Name: ").append(courses.get(i).getCourseName())
-              .append(", Code: ").append(courses.get(i).getCourseCode())
-              .append(", Capacity: ").append(courses.get(i).getCapacity())
-              .append("\n");
-            sb.append("Faculty: ").append(courses.get(i).getFaculty().getName())
-              .append(", Department: ").append(courses.get(i).getFaculty().getDepartment())
-              .append("\n");
-            sb.append("Enrolled Students:\n");
-        
-            for (Student student : courses.get(i).getEnrolledStudents()) {
-                enrollment.getStudentsPoints(courses.get(i), student);
-                System.out.println("Hoc sinh nay là:" + student);
-                
-                Float point = enrollment.getStudentsPoints(courses.get(i), student).get(student);
-                sb.append("- ").append(student.getName())
-                  .append(", Point: ").append(point)
-                  .append("\n");
-            }
-        }
-        
-        textArea.setText(sb.toString());
+        add(tabbedPane, BorderLayout.CENTER);
 
-        add(scrollPane, BorderLayout.CENTER);
+        loadStudentData(studentTableModel);
+        loadFacultyData(facultyTableModel);
+        loadCourseEnrollmentData(courseEnrollmentTableModel);
 
         setVisible(true);
+    }
+
+    private void loadStudentData(DefaultTableModel model) {
+        String jdbcURL = "jdbc:mysql://localhost:3306/cosodaotao";
+        String jdbcDriver = "com.mysql.cj.jdbc.Driver";
+        String user = "root";
+        String password = "dinhthai2004";
+
+        try (Connection connection = DriverManager.getConnection(jdbcURL, user, password)) {
+            String query = "SELECT * FROM student";
+            PreparedStatement statement = connection.prepareStatement(query);
+            ResultSet resultSet = statement.executeQuery();
+
+            while (resultSet.next()) {
+                String name = resultSet.getString("name");
+                String id = resultSet.getString("id");
+                String major = resultSet.getString("major");
+                String gender = resultSet.getString("gender");
+                model.addRow(new Object[]{name, id, major, gender});
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void loadFacultyData(DefaultTableModel model) {
+        String jdbcURL = "jdbc:mysql://localhost:3306/cosodaotao";
+        String jdbcDriver = "com.mysql.cj.jdbc.Driver";
+        String user = "root";
+        String password = "dinhthai2004";
+
+        try (Connection connection = DriverManager.getConnection(jdbcURL, user, password)) {
+            String query = "SELECT * FROM faculty";
+            PreparedStatement statement = connection.prepareStatement(query);
+            ResultSet resultSet = statement.executeQuery();
+
+            while (resultSet.next()) {
+                String name = resultSet.getString("name");
+                String id = resultSet.getString("id");
+                String department = resultSet.getString("department");
+                String gender = resultSet.getString("gender");
+                model.addRow(new Object[]{name, id, department, gender});
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void loadCourseEnrollmentData(DefaultTableModel model) {
+        String jdbcURL = "jdbc:mysql://localhost:3306/cosodaotao";
+        String jdbcDriver = "com.mysql.cj.jdbc.Driver";
+        String user = "root";
+        String password = "dinhthai2004";
+
+        try (Connection connection = DriverManager.getConnection(jdbcURL, user, password)) {
+            String query = "SELECT " +
+            "c.coursename, " +
+            "c.coursecode, " +
+            "c.capacity, " +
+            "f.name AS facultyname, " +
+            "f.department AS facultydepartment, " +
+            "s.name AS studentname, " +
+            "p.point " +
+            "FROM " +
+            "cosodaotao.course c " +
+            "INNER JOIN " +
+            "point p ON c.courseCode = p.courseCode " +
+            "INNER JOIN " +
+            "faculty f ON c.facultyid = f.facultyid " +
+            "INNER JOIN " +
+            "student s ON p.studentid = s.studentid;";
+
+            PreparedStatement statement = connection.prepareStatement(query);
+            ResultSet resultSet = statement.executeQuery();
+
+            while (resultSet.next()) {
+                String courseName = resultSet.getString("coursename");
+                String courseCode = resultSet.getString("coursecode");
+                int capacity = resultSet.getInt("capacity");
+                String facultyName = resultSet.getString("facultyname");
+                String facultyDepartment = resultSet.getString("facultydepartment");
+                String studentName = resultSet.getString("studentname");
+                float point = resultSet.getFloat("point");
+                model.addRow(new Object[]{courseName, courseCode, capacity, facultyName, facultyDepartment, studentName, point});
+                
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

@@ -1,12 +1,11 @@
 import java.util.HashMap;
 import java.util.ArrayList;
 import java.util.*;
-
+import java.sql.*;
 public class Enrollment {
     private HashMap<Student, ArrayList<Course>> enrollments;
     private HashMap<Course, HashMap<Student, Float>> coursePoints;
-    public HashMap<String, HashMap<String, Float>> infoHashmap;
-    public List<HashMap<Course, HashMap<Student, Float>>> listHashMap; 
+    // public List<HashMap<Course, HashMap<Student, Float>>> listHashMap; 
     private HashMap<Student, ArrayList<Float>> gpa;
 
     private ArrayList<Course> courses;
@@ -14,8 +13,7 @@ public class Enrollment {
     public Enrollment() {
         enrollments = new HashMap<>();
         coursePoints = new HashMap<>();
-        listHashMap = new ArrayList<>();
-        infoHashmap = new HashMap<>();
+        // listHashMap = new ArrayList<>();
         gpa = new HashMap<>();
     }
 
@@ -25,8 +23,6 @@ public class Enrollment {
             enrollments.get(student).add(course);
             coursePoints.putIfAbsent(course, new HashMap<>());
             coursePoints.get(course).put(student, point);
-            infoHashmap.putIfAbsent(course.getCourseName(), new HashMap<>());
-            infoHashmap.get(course.getCourseName()).put(student.getName(), point);
             gpa.putIfAbsent(student, new ArrayList<>());
             gpa.get(student).add(point);
             getCourses(student);
@@ -57,11 +53,38 @@ public class Enrollment {
         return coursePoints.getOrDefault(course, new HashMap<>());
     }
     public float getStudentGPA(Student student) {
-        ArrayList<Float> listPoint = gpa.get(student);
+        String jdbcURL = "jdbc:mysql://localhost:3306/cosodaotao";
+        String jdbcDriver = "com.mysql.cj.jdbc.Driver";
+        String user = "root";
+        String password = "dinhthai2004";
+        Connection connection = null;
         float sum = 0;
-        for (Float point : listPoint) {
-            sum += point;
+        int count = 0;
+        try {
+            connection = DriverManager.getConnection(jdbcURL, user, password);
+            String query = "SELECT point FROM point WHERE studentid = ?";
+            PreparedStatement statement = connection.prepareStatement(query);
+            statement.setString(1, student.getId());
+            ResultSet resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                float point = resultSet.getFloat("point");
+                sum += point;
+                count++;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (connection != null) {
+                    connection.close();
+                }
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
         }
-        return sum / listPoint.size();
+        if (count == 0) return 0; // To avoid division by zero
+        return sum / count;
     }
+    
+    
 }

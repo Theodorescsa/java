@@ -61,65 +61,53 @@ public class ManageStudentsFrame extends JFrame {
                 String user = "root"; 
                 String password = "dinhthai2004"; 
                 Connection connection = null;
-                Statement statement = null;
+                PreparedStatement preparedStatement = null;
                 try {
                     Class.forName(jdbcDriver);
                     connection = DriverManager.getConnection(jdbcURL, user, password);
-                    System.out.println("Ket noi thanh cong toi bang Students!");
-                    statement = connection.createStatement();
+                    System.out.println("Connected to the Students database!");
+
                     if (!name.isEmpty() && !id.isEmpty() && !major.isEmpty() && (maleRadioButton.isSelected() || femaleRadioButton.isSelected())) {
-                        if (maleRadioButton.isSelected() && !femaleRadioButton.isSelected()){
-                            students.add(new Student(name, id, true, major));
-                            try {
-                                Class.forName(jdbcDriver);
-                                connection = DriverManager.getConnection(jdbcURL, user, password);
-                                System.out.println("Ket noi thanh cong!");
-                                statement = connection.createStatement();
-                                String checkTypeNameQuery = "select studentid from student where studentid = ?";
-                                PreparedStatement preparedStatement = connection.prepareStatement(checkTypeNameQuery);
-                                preparedStatement.setString(1, id);
-                                ResultSet resultSet = preparedStatement.executeQuery();
-                                String insertToStudentTableQuery = "insert into student (name, studentid, gender, major) values (?, ?, ?, ?)";
-                                preparedStatement = connection.prepareStatement(insertToStudentTableQuery);
-                                preparedStatement.setString(1, name);
-                                preparedStatement.setString(2, id);
-                                preparedStatement.setString(3, "nam");
-                                preparedStatement.setString(4, major);
-                                preparedStatement.executeUpdate();
-                                System.out.println("Them sinh vien vao co so du lieu thanh cong");
-                            } catch (Exception err) {
-                                System.out.println(err);
-                            }
-                        };
-                        if (!maleRadioButton.isSelected() && femaleRadioButton.isSelected()){
-                            students.add(new Student(name, id, false, major));
-                            try {
-                                Class.forName(jdbcDriver);
-                                connection = DriverManager.getConnection(jdbcURL, user, password);
-                                System.out.println("Ket noi thanh cong!");
-                                statement = connection.createStatement();
-                                String checkTypeNameQuery = "select studentid from student where studentid = ?";
-                                PreparedStatement preparedStatement = connection.prepareStatement(checkTypeNameQuery);
-                                preparedStatement.setString(1, id);
-                                ResultSet resultSet = preparedStatement.executeQuery();
-                                String insertToStudentTableQuery = "insert into student (name, studentid, gender, major) values (?, ?, ?, ?)";
-                                preparedStatement = connection.prepareStatement(insertToStudentTableQuery);
-                                preparedStatement.setString(1, name);
-                                preparedStatement.setString(2, id);
-                                preparedStatement.setString(3, "nu");
-                                preparedStatement.setString(4, major);
-                                preparedStatement.executeUpdate();
-                                System.out.println("Them sinh vien vao co so du lieu thanh cong");
-                            } catch (Exception err) {
-                                System.out.println(err);
-                            }
-                        };
-                        JOptionPane.showMessageDialog(null, "Student added successfully!");
+                        String checkStudentIdQuery = "SELECT studentid FROM student WHERE studentid = ?";
+                        preparedStatement = connection.prepareStatement(checkStudentIdQuery);
+                        preparedStatement.setString(1, id);
+                        ResultSet resultSet = preparedStatement.executeQuery();
+
+                        if (resultSet.next()) {
+                            // Student ID already exists
+                            JOptionPane.showMessageDialog(null, "Student ID already exists. Please enter a different ID.");
+                        } else {
+                            // Student ID does not exist, proceed to insert
+                            String genderValue = maleRadioButton.isSelected() ? "nam" : "nu";
+                            String insertStudentQuery = "INSERT INTO student (name, studentid, gender, major) VALUES (?, ?, ?, ?)";
+                            preparedStatement = connection.prepareStatement(insertStudentQuery);
+                            preparedStatement.setString(1, name);
+                            preparedStatement.setString(2, id);
+                            preparedStatement.setString(3, genderValue);
+                            preparedStatement.setString(4, major);
+                            preparedStatement.executeUpdate();
+
+                            // Add to local list
+                            students.add(new Student(name, id, gender, major));
+
+                            JOptionPane.showMessageDialog(null, "Student added successfully!");
+                        }
                     } else {
                         JOptionPane.showMessageDialog(null, "Please fill in all fields!");
                     }
-                } catch(Exception r) {
-                    System.err.println(r);
+                } catch (Exception err) {
+                    System.out.println(err);
+                } finally {
+                    try {
+                        if (preparedStatement != null) {
+                            preparedStatement.close();
+                        }
+                        if (connection != null) {
+                            connection.close();
+                        }
+                    } catch (SQLException sqlException) {
+                        sqlException.printStackTrace();
+                    }
                 }
             }
         });
